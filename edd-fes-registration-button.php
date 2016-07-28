@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name:     EDD - Frontend Submission Registration Button
- * Plugin URI:      @todo
+ * Plugin Name:     EDD - FES Registration Button
+ * Plugin URI:      https://wordpress.org/plugins/edd-fes-registration-button/
  * Description:     Adds [fes_registration_button] shortcode to allow already logged users apply to become a vendor with a simple click
  * Version:         1.0.0
  * Author:          rubengc
