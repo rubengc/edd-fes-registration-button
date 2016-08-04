@@ -6,14 +6,47 @@
 			submit_button = form.find('input[type=submit]'),
 			form_data = edd_fes_registration_button_validate_form(form);
 
-		console.log();
+		if ( fes_form.loading_icon != "" ){
+			var overlay = fesSpinner({
+				text: fes_form.loadingtext,
+				icon: fes_form.loading_icon
+			});
+		} else {
+			var opts = {
+				lines: 13, // The number of lines to draw
+				length: 11, // The length of each line
+				width: 5, // The line thickness
+				radius: 17, // The radius of the inner circle
+				corners: 1, // Corner roundness (0..1)
+				rotate: 0, // The rotation offset
+				color: '#FFF', // #rgb or #rrggbb
+				speed: 1, // Rounds per second
+				trail: 60, // Afterglow percentage
+				shadow: false, // Whether to render a shadow
+				hwaccel: false, // Whether to use hardware acceleration
+				className: 'fes_spinner', // The CSS class to assign to the spinner
+				zIndex: 2e9, // The z-index (defaults to 2000000000)
+				top: 'auto', // Top position relative to parent in px
+				left: 'auto' // Left position relative to parent in px
+			};
+
+			var target = document.createElement("div");
+			document.body.appendChild(target);
+
+			var spinner = new Spinner(opts).spin(target);
+			var overlay = fesSpinner({
+				text: fes_form.loadingtext,
+				spinner: spinner
+			});
+		}
 
 		if (form_data) {
 				submit_button.attr('disabled', 'disabled').addClass('button-primary-disabled');
 				$.post(registration_button.ajax.url, form_data, function (response) {
+					var title = '';
+					var message = '';
+
 					if (response.success) {
-						var title = '';
-						var message = '';
 						if ( response.title ){
 							title = response.title;
 						}
@@ -47,8 +80,6 @@
 						}
 					} else {
 						var errors = response.errors;
-						var title = '';
-						var message = '';
 						if ( response.title ){
 							title = response.title;
 						}
@@ -73,10 +104,8 @@
 					form.find('span.fes-loading').remove();
 				})
 				.fail( function(xhr, textStatus, errorThrown) {
-						var title = '';
-						var message = '';
-						title = 'Could not connect';
-						message = $(xhr.responseponseText).text();
+						var title = 'Could not connect';
+						var message = $(xhr.responseponseText).text();
 						console.log( message );
 						message = message.substring(0, message.indexOf("Call Stack"));
 						overlay.hide(); // hide loading overlay
@@ -97,7 +126,8 @@
 	function edd_fes_registration_button_validate_form(form) {
 		var temp,
 		form_data = form.serialize(),
-		rich_texts = [];
+		rich_texts = [],
+		val;
 
 		// grab rich texts from tinyMCE
 		$('.fes-rich-validation').each(function (index, item) {
